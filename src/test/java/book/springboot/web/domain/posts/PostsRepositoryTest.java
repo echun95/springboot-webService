@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -43,6 +45,23 @@ public class PostsRepositoryTest {
 
     }
 
+    @Test
+    public void BaseTimeEntity() throws Exception  {
+        //given
+        LocalDateTime now = LocalDateTime.of(2022, 6, 4, 0, 0, 0);
+        postsRepository.save(Posts.builder()
+                .title("title1")
+                .content("content1")
+                .author("author1")
+                .build());
+        //when
+        List<Posts> postsList = postsRepository.findAll();
+        //then
+        Posts posts = postsList.get(0);
+        System.out.println(">>>>>>>>>>>>> createdDate = " + posts.getCreatedDate() + ", modifiedDate=" + posts.getModifiedDate());
 
+        assertThat(posts.getCreatedDate()).isAfter(now);
+        assertThat(posts.getModifiedDate()).isAfter(now);
+    }
 
 }
