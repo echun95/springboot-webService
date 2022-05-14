@@ -6,6 +6,7 @@ import book.springboot.web.dto.PostsSaveRequestDto;
 import book.springboot.web.dto.PostsUpdateRequestDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
@@ -35,13 +40,26 @@ public class PostsApiControllerTest {
     
     @Autowired
     private PostsRepository postsRepository;
-    
+
+    @Autowired
+    private MockMvc mvc;
+
+    @Autowired
+    private WebApplicationContext context;
+
+//    @BeforeEach
+//    public void setup(){
+//        mvc = MockMvcBuilder
+//                .webAppContextSetup(context)
+//                .apply(springSecurity()).bulid;
+//    }
     @AfterEach
     public void tearDown() throws Exception{
         postsRepository.deleteAll();
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     public void Posts_등록된다() throws Exception  {
         //given
         String title = "title";
@@ -65,6 +83,7 @@ public class PostsApiControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     public void Posts_수정된다() throws Exception  {
         //given
         Posts savedPosts = postsRepository.save(Posts.builder()
