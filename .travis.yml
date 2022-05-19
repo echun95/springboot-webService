@@ -6,9 +6,6 @@ branches:
   only:
     - main
 
-before_script:
-  - cd springboot-webService/
-
 # 빌드 전에 gradlew의 권한을 추가한다.
 before_install:
   - chmod +x gradlew
@@ -27,19 +24,19 @@ notifications:
     recipients:
       - dldydcns123@gmail.com
 
-before_deploy:
-  - zip -r freelec-springboot2-webservice *
-  - mkdir -p deploy
-  - mv freelec-springboot2-webservice.zip deploy/freelec-springboot2-webservice.zip
-
-deploy:
-  - provider: s3
-  access_key_id: $AWS_ACCESS_KEY #Travis repo settings에 설정된 값
-  secret_access_key: $AWS_SECRET_KEY
-  bucket: freelec-springboot-build-buk #s3 버킷 명
-  region: ap-northeast-2
-  skip_cleanup: true
-  acl: private # zip 파일 접근을 private으로 설정
-  local_dir: deploy # before_deploy에서 생성한 디렉토리
-  wait-until-deployed: true
+#before_deploy:
+#  - zip -r freelec-springboot2-webservice *
+#  - mkdir -p deploy
+#  - mv freelec-springboot2-webservice.zip deploy/freelec-springboot2-webservice.zip
+#
+#deploy:
+#  - provider: s3
+#  access_key_id: $AWS_ACCESS_KEY #Travis repo settings에 설정된 값
+#  secret_access_key: $AWS_SECRET_KEY
+#  bucket: freelec-springboot-build-buk #s3 버킷 명
+#  region: ap-northeast-2
+#  skip_cleanup: true
+#  acl: private # zip 파일 접근을 private으로 설정
+#  local_dir: deploy # before_deploy에서 생성한 디렉토리
+#  wait-until-deployed: true
 
