@@ -6,6 +6,8 @@ branches:
   only:
     - main
 
+before_script:
+  - cd springboot-webService/
 
 # 빌드 전에 gradlew의 권한을 추가한다.
 before_install:
