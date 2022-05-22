@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: / #codedeploy에서 전달해준 파일 중 destination으로 이동시킬 대상을 지정, /는 전체파일을 의미
-    destination: /home/ec2-user/app/step2/zip/ #source에서 지정된 파일을 받을 위치
+    destination: /home/ec2-user/app/step3/zip/ #source에서 지정된 파일을 받을 위치
     overwrite: yes
 
 permissions:
@@ -12,7 +12,15 @@ permissions:
     group: ec2-user
 
 hooks:
+  AfterInstall:
+    - location: stop.sh # 엔진엑스와 연결되어 있지 않은 스프링 부트를 종료합니다.
+      timeout: 60
+      runas: ec2-user
   ApplicationStart:
-    - location: deploy.sh
+    - location: start.sh # 엔진엑스와 연결되어 있지 않은 Port로 새 버전의 스프링 부트를 시작합니다.
+      timeout: 60
+      runas: ec2-user
+  ValidateService:
+    - location: health.sh # 새 스프링 부트가 정상적으로 실행됐는지 확인 합니다.
       timeout: 60
       runas: ec2-user
